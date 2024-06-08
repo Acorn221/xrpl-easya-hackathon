@@ -1,0 +1,91 @@
+"use client";
+
+import { FC, useMemo, useState } from "react";
+import { Button } from "@sobrxrpl/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@sobrxrpl/ui/dialog";
+import { Input } from "@sobrxrpl/ui/input";
+import { Label } from "@sobrxrpl/ui/label";
+import { toast } from "@sobrxrpl/ui/toast";
+
+import { api } from "../../../../trpc/react";
+
+type MakeTransactionModalProps = {
+  walletId: string;
+};
+
+export const MakeTransactionModal: FC<MakeTransactionModalProps> = ({
+  walletId,
+}) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [amount, setAmount] = useState("100");
+  const [destination, setDestination] = useState("");
+
+  const makeTransaction = api.wallet.makeTransaction.useMutation({
+    onSuccess: () => {
+      toast.success("Transaction was successful!");
+      setModalOpen(false);
+    },
+    onError: (err) => {
+      toast.error("Failed to send transaction, " + err.message);
+    },
+  });
+
+  return (
+    <Dialog open={modalOpen}>
+      <DialogTrigger asChild onClick={() => setModalOpen(true)}>
+        <Button>Send XRP</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Send XRP</DialogTitle>
+          <DialogDescription>Send XRP to another wallet</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="amount" className="text-right">
+              Amount
+            </Label>
+            <Input
+              id="amount"
+              placeholder="100"
+              className="col-span-3"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="destination" className="text-right">
+              Destination Address
+            </Label>
+            <Input
+              id="destination"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              className="col-span-3"
+              placeholder="r3s37pJtdyoY6fWQYAYDKjSmKXeskx97yt"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            onClick={() => {
+              makeTransaction.mutate({ id: walletId, amount, destination });
+            }}
+            disabled={makeTransaction.isPending}
+          >
+            Send
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};

@@ -1,6 +1,8 @@
 "use client";
 
 import { FC, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrayElement, RouterOutputs } from "@sobrxrpl/api";
 import { Button } from "@sobrxrpl/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@sobrxrpl/ui/card";
@@ -16,11 +18,14 @@ type CreateWalletProps = {
 
 export const CreateWallet: FC<CreateWalletProps> = ({ onComplete }) => {
   const [walletName, setWalletName] = useState<string>("");
+  // for refreshing the page after creating a wallet
+  const router = useRouter();
 
   const createWallet = api.wallet.create.useMutation({
     onSuccess: () => {
       setWalletName("");
       toast.success("Wallet created");
+      router.refresh();
     },
     onError: (err) => {
       console.error(err);
@@ -47,8 +52,16 @@ type DisplayedWalletProps = {
 };
 
 export const DisplayedWallet: FC<DisplayedWalletProps> = ({ data }) => {
+  const router = useRouter();
+
   return (
-    <Button variant="secondary" className="flex justify-center align-middle">
+    <Button
+      variant="secondary"
+      className="flex justify-center align-middle"
+      onClick={() => {
+        router.push(`/wallet/${data.id}`);
+      }}
+    >
       {data.name}
     </Button>
   );

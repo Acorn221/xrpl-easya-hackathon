@@ -12,6 +12,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import type xrpl from "xrpl";
+import type { VerificationSettings } from "./types";
 
 export const Post = pgTable("post", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -66,6 +67,7 @@ export const Account = pgTable(
     scope: varchar("scope", { length: 255 }),
     id_token: text("id_token"),
     session_state: varchar("session_state", { length: 255 }),
+    verificationSettings: json("verificationSettings").$type<VerificationSettings>(),
   },
   (account) => ({
     compoundKey: primaryKey({
