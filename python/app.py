@@ -41,6 +41,3 @@ def add_to_persons():
         pages_to_jsons[PERSONS_PAGE].append(obj)
         return obj, 201
     return {"error": "Request must be JSON"}, 415
-
-def post(send_dict: dict, page: str) -> flask.Response:
-    requests.post(page_str_format(page), json=send_dict)
