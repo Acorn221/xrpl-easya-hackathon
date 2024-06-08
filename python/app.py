@@ -1,9 +1,11 @@
 from flask import Flask, jsonify
+from werkzeug.utils import secure_filename
 import flask
 import requests
 
 BASE_LOCALHOST = "http://127.0.0.1:5000"
 PERSONS_PAGE = "/persons"
+UPLOAD_PAGE = "/upload" # corresponds to action in upload_form.html
 ONE_INDEXED = False
 app = Flask(__name__)
 
@@ -30,10 +32,10 @@ def page_str_format(page: str) -> str:
 
 @app.get(PERSONS_PAGE)
 def get_persons() -> flask.Response:
-    return  jsonify_page(PERSONS_PAGE)
+    return jsonify_page(PERSONS_PAGE)
 
 @app.post(PERSONS_PAGE)
-def add_to_persons():
+def add_to_persons() -> flask.Response:
     if flask.request.is_json:
         obj = flask.request.get_json()
         if "id" not in obj.values():
@@ -41,3 +43,17 @@ def add_to_persons():
         pages_to_jsons[PERSONS_PAGE].append(obj)
         return obj, 201
     return {"error": "Request must be JSON"}, 415
+
+@app.route('/')
+def home():
+    return flask.render_template('upload_form.html')
+
+@app.route('/transform', methods=['POST'])
+# trans_fn should return a dict
+def transform_file(trans_fn = lambda x: {x.filename : 201}) -> flask.Response:
+    ret = dict()
+    files = flask.request.files.getlist("file")
+    if files:
+        for file in files:
+                ret.update(trans_fn(file))
+    return jsonify(ret)
