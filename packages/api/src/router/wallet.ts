@@ -1,13 +1,13 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
-import { desc, eq } from "@sobrxrpl/db";
-import { CreatePostSchema, Post, User, Wallet } from "@sobrxrpl/db/schema";
+import { eq } from "@sobrxrpl/db";
+import { Post, User, Wallet } from "@sobrxrpl/db/schema";
 
 import { protectedProcedure } from "../trpc";
-import xrpl from "xrpl";
+import { Client, Wallet as XRPLWallet } from "xrpl";
 
-const xrplClient = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
+const xrplClient = new Client("wss://s.altnet.rippletest.net:51233");
 
 const defaultWalletFunds = 420;
 
@@ -15,7 +15,7 @@ export const walletRouter = {
   getAll: protectedProcedure
     .query(({ ctx }) => {
 
-      return ctx.db.select().from(Wallet).where(eq(User.id, ctx.session.user.id));
+      return ctx.db.select().from(Wallet).where(eq(Wallet.userId, ctx.session.user.id));
     }),
 	
 	getById: protectedProcedure
@@ -27,12 +27,12 @@ export const walletRouter = {
 		}),
 
   create: protectedProcedure
-		.input(z.object({ name: z.string() }))
+		.input(z.object({ name: z.string().min(3).max(20) }))
     .mutation(async ({ ctx, input }) => {
 			// create a wallet on the xrpl
 			await xrplClient.connect();
 
-			const wallet = xrpl.Wallet.generate();
+			const wallet = XRPLWallet.generate();
 
 			await xrplClient.fundWallet(wallet, {
 				amount: `${defaultWalletFunds}`,

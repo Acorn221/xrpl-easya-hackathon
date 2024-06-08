@@ -8,12 +8,12 @@ import {
   PostCardSkeleton,
   PostList,
 } from "./_components/posts";
+import { WalletManager } from "./_components/wallet";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function HomePage() {
   // You can await this here if you don't want to show Suspense fallback below
-  const posts = api.post.all();
 
   return (
     <main className="container h-screen py-16">
@@ -30,7 +30,9 @@ export default function HomePage() {
         </div>
         <AuthShowcase />
 
-        <CreatePostForm />
+        <WalletManager />
+
+        {/* <CreatePostForm />
         <div className="w-full max-w-2xl overflow-y-scroll">
           <Suspense
             fallback={
@@ -43,7 +45,7 @@ export default function HomePage() {
           >
             <PostList posts={posts} />
           </Suspense>
-        </div>
+        </div> */}
       </div>
     </main>
   );
