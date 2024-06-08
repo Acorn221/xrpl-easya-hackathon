@@ -1,10 +1,12 @@
 export const runtime = "edge";
+import styles from './styles.module.css'
 import {
   Game,
 } from "./../_components/reaction";
 export default function HomePage() {
+  const difficulty=10
   return (
-    <main className="container h-screen py-16">
+    <main className="container max-h-screen py-16">
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           Reaction Game
@@ -12,7 +14,17 @@ export default function HomePage() {
         <p>Click on "Start" first, and wait until the
           background color changes. As soon as it changes, hit "Stop!"
         </p>
-        <Game/>
+        <div className="relative w-full h-screen flex flex-grow">
+          <Game/>
+          <div>
+            {[...Array(difficulty)].map((e, i) => <div className={styles.mblock}></div>)}
+          </div>
+        </div>
+          <div>
+            <div className={styles.wave}></div>
+            <div className={styles.wave}></div>
+            <div className={styles.wave}></div>
+          </div>
       </div>
     </main>
   );
