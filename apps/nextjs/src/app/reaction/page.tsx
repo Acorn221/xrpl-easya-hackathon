@@ -12,7 +12,7 @@ export default function HomePage() {
           Reaction Game
         </h1>
         <p>Click on "Start" first, and wait until the
-          background color changes. As soon as it changes, hit "Stop!"
+          color of the white dot that changes color. As soon as it changes, hit click any where on the screen.
         </p>
         <div className="relative w-full h-screen flex flex-grow">
           <Game/>

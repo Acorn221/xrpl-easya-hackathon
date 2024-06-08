@@ -10,7 +10,6 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerTitle,
-    DrawerTrigger,
 } from "@sobrxrpl/ui/drawer"
 
 
@@ -36,7 +35,7 @@ export function Game() {
         setStarted(true)
         setTimeout(() => {
             generateColor()
-        }, Math.floor(Math.random() * 5000));
+        },2000+Math.floor(Math.random() * 5000));
     }
     function handleStop() {
         if(colorGeneratedAt>0){
@@ -58,13 +57,15 @@ export function Game() {
     }
 
   return (
-      <div className="flex flex-row rounded-lg  p-4">
-        <div className="flex-grow">
+
+      <div className="flex flex-row rounded-lg p-4">
+        <div className="relative flex-grow">
                     <div className="flex flex-row gap-4 ">
                         {!started && <Button onClick={handleStart}>Start</Button>}
                     </div>
-            <div className="flex flex-grow h-52 rounded-lg  p-1 m-1" style={{ backgroundColor: `#${color}` }}>
-            </div>
+
+            {started && <div className="flex flex-grow rounded-lg  p-1 m-1  absolute" style={{ backgroundColor: `#${color}` }}>
+            </div>}
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
                 <DrawerContent>
                     <DrawerHeader>
