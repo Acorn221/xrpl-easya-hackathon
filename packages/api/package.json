@@ -24,6 +24,7 @@
     "@sobrxrpl/validators": "workspace:*",
     "@trpc/server": "11.0.0-rc.364",
     "superjson": "2.2.1",
+    "xrpl": "^3.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

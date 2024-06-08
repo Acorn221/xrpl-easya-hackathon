@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import {
   integer,
+  json,
   pgTable,
   primaryKey,
   text,
@@ -10,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import type xrpl from "xrpl";
 
 export const Post = pgTable("post", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -89,4 +91,20 @@ export const Session = pgTable("session", {
 
 export const SessionRelations = relations(Session, ({ one }) => ({
   user: one(User, { fields: [Session.userId], references: [User.id] }),
+}));
+
+export const Wallet = pgTable("wallet", {
+  id: uuid("id").notNull().primaryKey().defaultRandom(),
+  userId: uuid("userId").notNull().references(() => User.id, {
+    onDelete: "cascade",
+  }),
+  name: varchar("name", { length: 255 }).notNull(),
+  lastBalance: integer("lastBalance").notNull().default(0),
+  privateKey: text("privateKey").notNull(),
+  publicKey: text("publicKey").notNull(),
+  fullWallet: json("fullWallet").$type<xrpl.Wallet>().notNull(),
+});
+
+export const WalletRelations = relations(Wallet, ({ one }) => ({
+  user: one(User, { fields: [Wallet.userId], references: [User.id] }),
 }));

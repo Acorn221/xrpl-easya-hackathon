@@ -18,8 +18,12 @@ export default function HomePage() {
   return (
     <main className="container h-screen py-16">
       <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex justify-center align-middle">
-          <img src={logo.src} alt="XRPL Logo" className="m-auto h-32 w-32" />
+        <div className="flex justify-center gap-4 align-middle">
+          <img
+            src={logo.src}
+            alt="XRPL Logo"
+            className="m-auto h-32 w-32 rounded-full"
+          />
           <h1 className="m-auto flex-1 text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Sobr XRPL
           </h1>
