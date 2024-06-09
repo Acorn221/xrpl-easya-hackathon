@@ -2,7 +2,7 @@ export const runtime = "edge";
 import styles from './styles.module.css'
 import {
   Game,
-} from "./../_components/reaction";
+} from "../../_components/reaction";
 export default function HomePage() {
   const difficulty=10
   return (
