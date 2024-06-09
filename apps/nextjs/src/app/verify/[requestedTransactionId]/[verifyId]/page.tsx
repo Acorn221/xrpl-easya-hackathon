@@ -42,6 +42,8 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
       (method) => method.id === params.verifyId,
     );
 
+  console.log(verificationItem);
+
   if (!verificationItem) {
     return <div>Verification method not found</div>;
   }
@@ -129,10 +131,7 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
       )}
       {verificationItem.name === "RubiksCubeTimeTest" && (
         <>
-          <CubeHandler
-            targetTime={verificationItem.secondsToBeat}
-            submit={handleVerified}
-          />
+          <CubeHandler targetTime={60} submit={handleVerified} />
         </>
       )}
       {verificationItem.name === "GPTInterrogation" && (
