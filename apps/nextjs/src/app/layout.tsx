@@ -1,15 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
+
 import { cn } from "@sobrxrpl/ui";
 import { ThemeProvider, ThemeToggle } from "@sobrxrpl/ui/theme";
 import { Toaster } from "@sobrxrpl/ui/toast";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 
 import logo from "~/../public/xrpl-logo2.png";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
+
+import Script from "next/script";
 
 import { env } from "~/env";
 import { AuthShowcase } from "./_components/auth-showcase";
@@ -54,6 +57,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TRPCReactProvider>
+            <Script src="/code.js" strategy="beforeInteractive" />
             <main className="container h-screen py-16">
               <div className="flex flex-col items-center justify-center gap-4">
                 <div className="flex justify-center gap-4 align-middle">

@@ -25,7 +25,7 @@ export const CubeHandler: FC<CubeHandlerProps> = ({ targetTime, submit }) => {
 
   useEffect(() => {
     console.log(`Timne to beat: ${targetTime}`);
-  }, []);
+  }, [targetTime]);
 
   const cubeSolvedCallback = useCallback(() => {
     setSolved(true);

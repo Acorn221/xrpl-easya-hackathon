@@ -58,6 +58,10 @@ export const User = pgTable("user", {
         name: "GPTInterrogation",
         beliefs: [],
       },
+      {
+        name: "RubiksCubeTimeTest",
+        secondsToBeat: 60,
+      }
     ],
   }),
 });

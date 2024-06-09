@@ -129,7 +129,6 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
       )}
       {verificationItem.name === "RubiksCubeTimeTest" && (
         <>
-          <Script src="/code.js" strategy="beforeInteractive" />
           <CubeHandler
             targetTime={verificationItem.secondsToBeat}
             submit={handleVerified}
