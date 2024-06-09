@@ -81,12 +81,17 @@ export const Game: FC<GameProps> = ({ submitScore }) => {
               <DrawerDescription>
                 Reaction time: {reactionTime} seconds
               </DrawerDescription>
-              <DrawerDescription>{reactionRemark}</DrawerDescription>
+              <DrawerDescription>
+                {reactionRemark} - {reactionTime > 0.45 ? "FAILED" : "PASSED"}
+              </DrawerDescription>
             </DrawerHeader>
             <DrawerFooter>
-              <Button onClick={() => submitScore?.(reactionTime)}>
-                Submit
-              </Button>
+              {reactionTime < 0.45 && (
+                <Button onClick={() => submitScore?.(reactionTime)}>
+                  Submit
+                </Button>
+              )}
+
               <DrawerClose>
                 <Button variant="outline">Try Again</Button>
               </DrawerClose>
