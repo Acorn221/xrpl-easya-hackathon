@@ -48,6 +48,10 @@ export const User = pgTable("user", {
     methods: [
       {
         name: "ReactionTest",
+      },
+      {
+        name: "RubiksCubeTimeTest",
+        secondsToBeat: 60,
       }
     ],
   }),

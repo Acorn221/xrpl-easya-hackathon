@@ -7,7 +7,7 @@ export interface VerificationSettings {
 	methods: VerificationMethods[];
 }
 
-export type VerificationMethods = GPTInterrogation | ReactionTest | PupilDialationTest;
+export type VerificationMethods = GPTInterrogation | ReactionTest | PupilDialationTest | RubiksCubeTimeTest;
 
 export interface GPTInterrogation {
 	name: "GPTInterrogation";
@@ -22,3 +22,7 @@ export interface PupilDialationTest {
 	name: "PupilDialationTest";
 }
 
+export interface RubiksCubeTimeTest {
+	name: "RubiksCubeTimeTest";
+	secondsToBeat: number;
+}

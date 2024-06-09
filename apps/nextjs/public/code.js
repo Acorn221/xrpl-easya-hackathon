@@ -2863,7 +2863,6 @@ const GiikerCube = function () {
 			if (latestFacelet != kernel.getProp('giiSolved', mathlib.SOLVED_FACELET)) {
 				const rst = kernel.getProp('giiRST');
 				if (rst == 'a' || rst == 'p' && confirm(CONFIRM_GIIRST)) {
-					console.log("VERY SOLVED");
 					// giikerutil.markSolved();
 				}
 			}
@@ -2921,6 +2920,8 @@ const GiikerCube = function () {
 				const tmp = curCubie;
 				curCubie = prevCubie;
 				prevCubie = tmp;
+				const moveEvent = new CustomEvent('move', { detail: { move: prevMoves[i], time: timeOffs[i] } });
+				window.dispatchEvent(moveEvent);
 				DEBUG && console.log('[gancube] move', prevMoves[i], timeOffs[i]);
 			}
 			deviceTimeOffset = locTime - deviceTime;
@@ -3051,13 +3052,19 @@ const GiikerCube = function () {
 				if (cc.verify() != 0) {
 					keyCheck++;
 					DEBUG && console.log('[gancube]', 'v2 facelets state verify error');
+					event = new CustomEvent("unSolved");
+					window.dispatchEvent(event);
 					return;
 				}
 				latestFacelet = cc.toFaceCube();
 				DEBUG && console.log('[gancube]', 'v2 facelets event state parsed', latestFacelet);
 				if (latestFacelet === "LLUDULLUDRFFURUBBFDRBBFFFRULFRFDRFBLBLBDLLDDURUUBBRDDR") {
 					console.log("SOLVED");
-
+					event = new CustomEvent("cubeSolved");
+					window.dispatchEvent(event);
+				} else {
+					event = new CustomEvent("unSolved");
+					window.dispatchEvent(event);
 				}
 				if (prevMoveCnt == -1) {
 					initCubeState();
@@ -3398,10 +3405,3 @@ const GiikerCube = function () {
 		}
 	};
 };
-
-const c = new GiikerCube();
-c.setCallback(function (facelet, moves, times, name) {
-	console.log(facelet, moves, times, name);
-});
-
-c.init();

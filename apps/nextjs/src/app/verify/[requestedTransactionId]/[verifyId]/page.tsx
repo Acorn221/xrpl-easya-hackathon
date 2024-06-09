@@ -2,10 +2,15 @@
 
 import type { FC } from "react";
 import { redirect } from "next/navigation";
+import Script from "next/script";
+
+import { Button } from "@sobrxrpl/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@sobrxrpl/ui/card";
 
 import { Game } from "~/app/_components/reaction";
 import styles from "~/app/challenge/reaction/styles.module.css";
 import { api } from "~/trpc/server";
+import { CubeHandler } from "./cubeHandler";
 import { VerifyButton } from "./verifyButton";
 
 interface VerifyPageProps {
@@ -94,6 +99,15 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
             <div className={styles.wave}></div>
           </div>
         </div>
+      )}
+      {verificationItem.name === "RubiksCubeTimeTest" && (
+        <>
+          <Script src="/code.js" strategy="beforeInteractive" />
+          <CubeHandler
+            targetTime={verificationItem.secondsToBeat}
+            submit={handleVerified}
+          />
+        </>
       )}
     </div>
   );
