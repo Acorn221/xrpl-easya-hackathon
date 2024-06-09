@@ -2,8 +2,8 @@
 
 import type { FC } from "react";
 import { redirect } from "next/navigation";
-
-import { Game } from "~/app/_components/reaction";
+import Webcam from "react-webcam";
+import { Game, VideoVerify } from "~/app/_components/reaction";
 import {
   ChallengeCardWithForm
 } from "~/app/_components/ai-verify";
@@ -64,8 +64,25 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
       <h1>Verify</h1>
       <div>Transaction ID: {params.requestedTransactionId}</div>
       <div>Verify ID: {params.verifyId}</div>
+
       <div></div>
       {/* <VerifyButton verify={handleVerified} /> */}
+      {verificationItem.name === "ReactionTest" && (
+        <div className="flex flex-col items-center justify-center gap-4">
+          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+            Reaction Game
+          </h1>
+          <p>
+            Click on "Start" first, and wait until the color of the white dot
+            that changes color. As soon as it changes, hit click any where on
+            the screen.
+          </p>
+          <div className="relative flex h-screen w-full flex-grow">
+            <VideoVerify
+            />
+          </div>
+        </div>
+      )}
       {verificationItem.name === "ReactionTest" && (
         <div className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">

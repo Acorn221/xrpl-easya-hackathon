@@ -54,6 +54,9 @@ export const User = pgTable("user", {
           name: "ReactionTest",
         },
         {
+          name: "PupilDialationTest",
+        },
+        {
           name: "GPTInterrogation",
           beliefs: [],
         },

@@ -1,7 +1,7 @@
 "use client";
-
+import Webcam from "react-webcam";
 import type { FC } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 
 import { Button } from "@sobrxrpl/ui/button";
 import {
@@ -16,6 +16,52 @@ import {
 
 interface GameProps {
   submitScore?: (score: number) => Promise<void>;
+}
+
+export const VideoVerify = () => {
+  const webcamRef = useRef(null);
+  const [imgSrc, setImgSrc] = useState(null);
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setImgSrc(imageSrc);
+    console.log(imageSrc)
+  }, [webcamRef]);
+
+  const send = async () => {
+    const bodyFormData = new FormData();
+    const blob = await fetch(imgSrc).then((res) => res.blob())
+    // const image = fs.readFileSync(blob.path);
+    // const b64Image = Buffer.from(image).toString('base64');
+    // bodyFormData.append('file', imageSrc);
+    bodyFormData.append('file', blob)
+    const resp = await fetch("http://192.168.5.127:5000/upload", {
+      method: "POST",
+      body: bodyFormData,
+    }).then((response) => console.log(response))
+      .then((result) => {
+        console.log('Success:', result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+
+  return (<div className="container">
+    {imgSrc ? (
+      <div>
+        <img src={imgSrc} alt="webcam" />
+        <Button onClick={send}>Send</Button></div>
+    ) : (
+      <div>
+        <Webcam height={600} width={600} ref={webcamRef} />
+        <Button onClick={capture}>Capute</Button>
+      </div>
+    )
+    }
+  </div >)
+
 }
 
 export const Game: FC<GameProps> = ({ submitScore }) => {
@@ -70,6 +116,7 @@ export const Game: FC<GameProps> = ({ submitScore }) => {
           style={{ backgroundColor: `#${color}` }}
         ></div>
       )}
+
       <div className="relative flex-grow">
         <div className="flex flex-row gap-4 ">
           {!started && <Button onClick={handleStart}>Start</Button>}
