@@ -4,10 +4,12 @@ import type { FC } from "react";
 import { redirect } from "next/navigation";
 
 import { Game } from "~/app/_components/reaction";
+import {
+  ChallengeCardWithForm
+} from "~/app/_components/ai-verify";
 import styles from "~/app/challenge/reaction/styles.module.css";
 import { api } from "~/trpc/server";
-import { VerifyButton } from "./verifyButton";
-
+import { auth } from "@sobrxrpl/auth";
 interface VerifyPageProps {
   params: {
     requestedTransactionId: string;
@@ -16,6 +18,7 @@ interface VerifyPageProps {
 }
 
 const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
+  const session = await auth();
   const requestedTransaction = await api.wallet.getRequestedTransaction({
     id: params.requestedTransactionId,
   });
@@ -61,6 +64,7 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
       <h1>Verify</h1>
       <div>Transaction ID: {params.requestedTransactionId}</div>
       <div>Verify ID: {params.verifyId}</div>
+      <div></div>
       {/* <VerifyButton verify={handleVerified} /> */}
       {verificationItem.name === "ReactionTest" && (
         <div className="flex flex-col items-center justify-center gap-4">
@@ -95,6 +99,22 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
             <div className={styles.wave}></div>
             <div className={styles.wave}></div>
           </div>
+        </div>
+      )}
+      {verificationItem.name === "GPTInterrogation" && (
+        <div className="flex flex-col items-center justify-center gap-4">
+          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+            AI Verification
+          </h1>
+          <ChallengeCardWithForm profile={session.user.profile} handleResult={async (score) => {
+            "use server";
+
+            if (score) {
+              return handleVerified();
+            } else {
+              redirect(`/wallet/${requestedTransaction.wallet.id}/`);
+            }
+          }} />
         </div>
       )}
     </div>
