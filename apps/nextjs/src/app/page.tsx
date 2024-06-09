@@ -25,6 +25,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <h1>My Profile</h1>
+      <div>{session.user.profile}</div>
       <WalletManager />
       <RequestedTransactionsIndicator />
     </>

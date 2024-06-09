@@ -1,3 +1,4 @@
+import type xrpl from "xrpl";
 import { relations, sql } from "drizzle-orm";
 import {
   integer,
@@ -11,7 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import type xrpl from "xrpl";
+
 import type { VerificationSettings, VerifiedOptions } from "./types";
 
 export const Post = pgTable("post", {
@@ -37,6 +38,7 @@ export const CreatePostSchema = createInsertSchema(Post, {
 export const User = pgTable("user", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }),
+  profile: varchar("profile", { length: 255 }).default("What are your views on politics? I hate all politicians."),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
@@ -50,9 +52,12 @@ export const User = pgTable("user", {
         name: "ReactionTest",
       },
       {
-        name: "RubiksCubeTimeTest",
-        secondsToBeat: 60,
-      }
+        name: "PupilDialationTest",
+      },
+      {
+        name: "GPTInterrogation",
+        beliefs: [],
+      },
     ],
   }),
 });
@@ -108,14 +113,26 @@ export const SessionRelations = relations(Session, ({ one }) => ({
 
 export const Wallet = pgTable("wallet", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
-  userId: uuid("userId").notNull().references(() => User.id, {
-    onDelete: "cascade",
-  }),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => User.id, {
+      onDelete: "cascade",
+    }),
   name: varchar("name", { length: 255 }).notNull(),
   lastBalance: integer("lastBalance").notNull().default(0),
   privateKey: text("privateKey").notNull(),
   publicKey: text("publicKey").notNull(),
   fullWallet: json("fullWallet").$type<xrpl.Wallet>().notNull(),
+});
+
+export const Profile = pgTable("profile", {
+  id: uuid("id").notNull().primaryKey().defaultRandom(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => User.id, {
+      onDelete: "cascade",
+    }),
+  profile: varchar("name", { length: 255 }),
 });
 
 export const WalletRelations = relations(Wallet, ({ one }) => ({
@@ -124,11 +141,16 @@ export const WalletRelations = relations(Wallet, ({ one }) => ({
 
 export const RequestedTransaction = pgTable("requested_transaction", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
-  walletId: uuid("walletId").notNull().references(() => Wallet.id, {
-    onDelete: "cascade",
-  }),
+  walletId: uuid("walletId")
+    .notNull()
+    .references(() => Wallet.id, {
+      onDelete: "cascade",
+    }),
   amount: text("amount").notNull(),
   destination: varchar("destination", { length: 255 }).notNull(),
-  status: varchar("status", { length: 255, enum: ["pending", "completed"] }).notNull(),
+  status: varchar("status", {
+    length: 255,
+    enum: ["pending", "completed"],
+  }).notNull(),
   verifiedOptions: json("verifiedOptions").$type<VerifiedOptions>().notNull(),
 });

@@ -33,19 +33,12 @@ export const verifyRouter = {
                 })
             )
         }))
-        .mutation(async () => {
-            // const { answer,messages } = input;
-            // const chatCompletion = await openai.chat.completions.create({
-            //     messages: [
-            //         { role: 'user', content: `"${answer}".Is this correct yes or no?` },...messages],
-            //     model: 'gpt-3.5-turbo',
-            // });
-
+        .mutation(async ({ input }) => {
+            const { answer,messages } = input;
             const chatCompletion = await openai.chat.completions.create({
-                messages: [{ role: 'user', content: `"My favourite author is Malorie Blackman and my favourite book is Boys don't cry from Malorie Blackman. My hobbies include dodgeball, karate and climbing which I try to do on a weekly basis. I study computer science which I enjoy." Based on this statement ask a security question.` },
-                    { role: 'assistant', content: `What is the title of your favorite book by Malorie Blackman?` },
-                    { role: 'user', content: `Boys don't cry. Is this correct yes or no?` }
-                ],
+                messages: [
+                    ...messages,
+                    { role: 'user', content: `${answer}.Is this correct yes or no?` }],
                 model: 'gpt-3.5-turbo',
             });
 
