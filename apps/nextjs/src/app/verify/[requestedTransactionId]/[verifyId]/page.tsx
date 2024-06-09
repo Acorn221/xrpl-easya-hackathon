@@ -3,22 +3,19 @@
 import type { FC } from "react";
 import { redirect } from "next/navigation";
 import Script from "next/script";
+import Webcam from "react-webcam";
 
+import { auth } from "@sobrxrpl/auth";
 import { Button } from "@sobrxrpl/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@sobrxrpl/ui/card";
+
+import { ChallengeCardWithForm } from "~/app/_components/ai-verify";
+import { Game, VideoVerify } from "~/app/_components/reaction";
 import styles from "~/app/challenge/reaction/styles.module.css";
 import { api } from "~/trpc/server";
 import { CubeHandler } from "./cubeHandler";
 import { VerifyButton } from "./verifyButton";
 
-import Webcam from "react-webcam";
-import { Game, VideoVerify } from "~/app/_components/reaction";
-import {
-  ChallengeCardWithForm
-} from "~/app/_components/ai-verify";
-import styles from "~/app/challenge/reaction/styles.module.css";
-import { api } from "~/trpc/server";
-import { auth } from "@sobrxrpl/auth";
 interface VerifyPageProps {
   params: {
     requestedTransactionId: string;
@@ -29,7 +26,7 @@ interface VerifyPageProps {
 const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
   const session = await auth();
 
-  if(!session) {
+  if (!session) {
     return <div>Not authenticated</div>;
   }
   const requestedTransaction = await api.wallet.getRequestedTransaction({
@@ -91,8 +88,7 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
             the screen.
           </p>
           <div className="relative flex h-screen w-full flex-grow">
-            <VideoVerify
-            />
+            <VideoVerify />
           </div>
         </div>
       )}
@@ -139,20 +135,24 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
             submit={handleVerified}
           />
         </>
+      )}
       {verificationItem.name === "GPTInterrogation" && (
         <div className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             AI Verification
           </h1>
-          <ChallengeCardWithForm profile={session.user.profile} handleResult={async (score) => {
-            "use server";
+          <ChallengeCardWithForm
+            profile={(session.user as any).profile}
+            handleResult={async (score) => {
+              "use server";
 
-            if (score) {
-              return handleVerified();
-            } else {
-              redirect(`/wallet/${requestedTransaction.wallet.id}/`);
-            }
-          }} />
+              if (score) {
+                return handleVerified();
+              } else {
+                redirect(`/wallet/${requestedTransaction.wallet.id}/`);
+              }
+            }}
+          />
         </div>
       )}
     </div>
