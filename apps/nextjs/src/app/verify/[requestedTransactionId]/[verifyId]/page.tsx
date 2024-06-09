@@ -80,9 +80,8 @@ const VerifyPage: FC<VerifyPageProps> = async ({ params }) => {
                 if (score < 0.45) {
                   return handleVerified();
                 } else {
-                  redirect(
-                    `/verify/${params.requestedTransactionId}/${nextUnverifiedOption.id}`,
-                  );
+                  redirect(`/wallet/${requestedTransaction.wallet.id}/`);
+                }
               }}
             />
             <div>
