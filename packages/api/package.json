@@ -23,6 +23,7 @@
     "@sobrxrpl/db": "workspace:*",
     "@sobrxrpl/validators": "workspace:*",
     "@trpc/server": "11.0.0-rc.364",
+    "openai": "^4.49.1",
     "superjson": "2.2.1",
     "uuid": "^9.0.1",
     "xrpl": "^3.1.0",
