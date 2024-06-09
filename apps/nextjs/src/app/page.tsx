@@ -8,39 +8,18 @@ import {
   PostCardSkeleton,
   PostList,
 } from "./_components/posts";
+import { RequestedTransactionsIndicator } from "./_components/requested-transactions";
+import { WalletManager } from "./_components/wallet";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function HomePage() {
   // You can await this here if you don't want to show Suspense fallback below
-  const posts = api.post.all();
 
   return (
-    <main className="container h-screen py-16">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex justify-center align-middle">
-          <img src={logo.src} alt="XRPL Logo" className="m-auto h-32 w-32" />
-          <h1 className="m-auto flex-1 text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Sobr XRPL
-          </h1>
-        </div>
-        <AuthShowcase />
-
-        <CreatePostForm />
-        <div className="w-full max-w-2xl overflow-y-scroll">
-          <Suspense
-            fallback={
-              <div className="flex w-full flex-col gap-4">
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-              </div>
-            }
-          >
-            <PostList posts={posts} />
-          </Suspense>
-        </div>
-      </div>
-    </main>
+    <>
+      <WalletManager />
+      <RequestedTransactionsIndicator />
+    </>
   );
 }

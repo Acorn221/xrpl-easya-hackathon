@@ -24,12 +24,15 @@
     "@sobrxrpl/validators": "workspace:*",
     "@trpc/server": "11.0.0-rc.364",
     "superjson": "2.2.1",
+    "uuid": "^9.0.1",
+    "xrpl": "^3.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@sobrxrpl/eslint-config": "workspace:*",
     "@sobrxrpl/prettier-config": "workspace:*",
     "@sobrxrpl/tsconfig": "workspace:*",
+    "@types/uuid": "^9.0.8",
     "eslint": "^9.2.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
