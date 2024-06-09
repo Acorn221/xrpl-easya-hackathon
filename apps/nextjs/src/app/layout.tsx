@@ -1,16 +1,18 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
+import { cn } from "@sobrxrpl/ui";
+import { ThemeProvider, ThemeToggle } from "@sobrxrpl/ui/theme";
+import { Toaster } from "@sobrxrpl/ui/toast";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
-import { cn } from "@acme/ui";
-import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
-import { Toaster } from "@acme/ui/toast";
-
+import logo from "~/../public/xrpl-logo2.png";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
 import { env } from "~/env";
+import { AuthShowcase } from "./_components/auth-showcase";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -51,7 +53,24 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <main className="container h-screen py-16">
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="flex justify-center gap-4 align-middle">
+                  <img
+                    src={logo.src}
+                    alt="XRPL Logo"
+                    className="m-auto h-32 w-32 rounded-full"
+                  />
+                  <h1 className="m-auto flex-1 text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+                    Sobr XRPL
+                  </h1>
+                </div>
+                <AuthShowcase />
+                {props.children}
+              </div>
+            </main>
+          </TRPCReactProvider>
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
           </div>
