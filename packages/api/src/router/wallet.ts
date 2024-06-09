@@ -66,28 +66,32 @@ export const walletRouter = {
 				throw new Error("User not found");
 			}
 
-			if(dbUser.verificationSettings) {
-				const { verificationSettings } = dbUser;
+			if(dbUser.verificationSettings && dbUser.verificationSettings.triggerWhenOver < +amount) {
+				const verifiedOptions = {
+					methods: dbUser.verificationSettings.methods.map((method) => ({
+						...method,
+						verified: false,
+						id: v4(),
+					})),
+				} satisfies VerifiedOptions;
+				// Request the user complete the verification methods
+				const requestedTransactionId = (await ctx.db.insert(RequestedTransaction).values({
+					amount,
+					destination,
+					walletId: id,
+					status: "pending",
+					verifiedOptions,
+				}).returning({ id: RequestedTransaction.id }))?.[0]?.id;
 
-				if(verificationSettings.triggerWhenOver > +amount) {
-					const verifiedOptions = {
-						methods: dbUser.verificationSettings.methods.map((method) => ({
-							...method,
-							verified: false,
-							id: v4(),
-						})),
-					} satisfies VerifiedOptions;
-					// Request the user complete the verification methods
-					await ctx.db.insert(RequestedTransaction).values({
-						amount,
-						destination,
-						walletId: id,
-						status: "pending",
-						verifiedOptions,
-					});
+				if(!requestedTransactionId) {
+					throw new Error("Failed to create requested transaction");
+				}
 
-					return verifiedOptions;
-				} 
+				return {
+					requestedTransactionId,
+					verifiedOptions
+				};
+			
 			} else {
 				await xrplClient.connect();
 				const wallet = new XRPLWallet(dbWallet.publicKey, dbWallet.privateKey);
@@ -165,6 +169,21 @@ export const walletRouter = {
 				}).where(eq(RequestedTransaction.id, requestedTransaction.id));
 				return newVerifiedOptions;
 			}
+		}),
+
+	getAllRequestedTransactions: protectedProcedure
+		.query(({ ctx }) => {
+			return ctx.db.select().from(RequestedTransaction)
+				.where(and(eq(RequestedTransaction.status, "pending"), eq(Wallet.userId, ctx.session.user.id)))
+				.innerJoin(Wallet, eq(RequestedTransaction.walletId, Wallet.id))
+		}),
+
+	getRequestedTransaction: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.query(({ ctx, input }) => {
+			return ctx.db.query.RequestedTransaction.findFirst({
+				where: and(eq(RequestedTransaction.id, input.id), eq(Wallet.userId, ctx.session.user.id)),
+			});
 		}),
 			
   create: protectedProcedure

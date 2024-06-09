@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@sobrxrpl/ui/button";
 import {
@@ -16,7 +16,7 @@ import { Input } from "@sobrxrpl/ui/input";
 import { Label } from "@sobrxrpl/ui/label";
 import { toast } from "@sobrxrpl/ui/toast";
 
-import { api } from "../../../../trpc/react";
+import { api } from "~/trpc/react";
 
 type MakeTransactionModalProps = {
   walletId: string;
@@ -31,15 +31,25 @@ export const MakeTransactionModal: FC<MakeTransactionModalProps> = ({
   const router = useRouter();
 
   const makeTransaction = api.wallet.makeTransaction.useMutation({
-    onSuccess: () => {
-      toast.success("Transaction was successful!");
-      setModalOpen(false);
-      router.refresh();
-    },
     onError: (err) => {
       toast.error("Failed to send transaction, " + err.message);
     },
   });
+
+  useEffect(() => {
+    if (makeTransaction.data === true) {
+      toast.success("Transaction was successful!");
+      setModalOpen(false);
+      router.refresh();
+    } else if (makeTransaction.data) {
+      const { requestedTransactionId, verifiedOptions } = makeTransaction.data;
+      const firstOption = verifiedOptions.methods?.[0];
+      if (!firstOption) {
+        return;
+      }
+      router.replace(`/verify/${requestedTransactionId}/${firstOption.id}`);
+    }
+  }, [makeTransaction.data]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={(e) => setModalOpen(e)}>

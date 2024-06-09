@@ -8,6 +8,7 @@ import {
   PostCardSkeleton,
   PostList,
 } from "./_components/posts";
+import { RequestedTransactionsIndicator } from "./_components/requested-transactions";
 import { WalletManager } from "./_components/wallet";
 
 // export const runtime = "edge";
@@ -15,5 +16,10 @@ import { WalletManager } from "./_components/wallet";
 export default function HomePage() {
   // You can await this here if you don't want to show Suspense fallback below
 
-  return <WalletManager />;
+  return (
+    <>
+      <WalletManager />
+      <RequestedTransactionsIndicator />
+    </>
+  );
 }

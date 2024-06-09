@@ -43,7 +43,14 @@ export const User = pgTable("user", {
     withTimezone: true,
   }),
   image: varchar("image", { length: 255 }),
-  verificationSettings: json("verificationSettings").$type<VerificationSettings>(),
+  verificationSettings: json("verificationSettings").$type<VerificationSettings>().default({
+    triggerWhenOver: 10,
+    methods: [
+      {
+        name: "ReactionTest",
+      }
+    ],
+  }),
 });
 
 export const UserRelations = relations(User, ({ many }) => ({
