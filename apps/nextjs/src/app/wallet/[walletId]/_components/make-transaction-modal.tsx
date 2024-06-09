@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@sobrxrpl/ui/button";
 import {
   Dialog,
@@ -27,11 +28,13 @@ export const MakeTransactionModal: FC<MakeTransactionModalProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [amount, setAmount] = useState("100");
   const [destination, setDestination] = useState("");
+  const router = useRouter();
 
   const makeTransaction = api.wallet.makeTransaction.useMutation({
     onSuccess: () => {
       toast.success("Transaction was successful!");
       setModalOpen(false);
+      router.refresh();
     },
     onError: (err) => {
       toast.error("Failed to send transaction, " + err.message);
@@ -39,7 +42,7 @@ export const MakeTransactionModal: FC<MakeTransactionModalProps> = ({
   });
 
   return (
-    <Dialog open={modalOpen}>
+    <Dialog open={modalOpen} onOpenChange={(e) => setModalOpen(e)}>
       <DialogTrigger asChild onClick={() => setModalOpen(true)}>
         <Button>Send XRP</Button>
       </DialogTrigger>
@@ -78,7 +81,11 @@ export const MakeTransactionModal: FC<MakeTransactionModalProps> = ({
           <Button
             type="submit"
             onClick={() => {
-              makeTransaction.mutate({ id: walletId, amount, destination });
+              makeTransaction.mutate({
+                id: walletId,
+                amount: `${parseInt(amount, 10) * 1000000}`,
+                destination,
+              });
             }}
             disabled={makeTransaction.isPending}
           >

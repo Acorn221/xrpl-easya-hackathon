@@ -12,7 +12,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import type xrpl from "xrpl";
-import type { VerificationSettings } from "./types";
+import type { VerificationSettings, VerifiedOptions } from "./types";
 
 export const Post = pgTable("post", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -43,6 +43,7 @@ export const User = pgTable("user", {
     withTimezone: true,
   }),
   image: varchar("image", { length: 255 }),
+  verificationSettings: json("verificationSettings").$type<VerificationSettings>(),
 });
 
 export const UserRelations = relations(User, ({ many }) => ({
@@ -67,7 +68,6 @@ export const Account = pgTable(
     scope: varchar("scope", { length: 255 }),
     id_token: text("id_token"),
     session_state: varchar("session_state", { length: 255 }),
-    verificationSettings: json("verificationSettings").$type<VerificationSettings>(),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -110,3 +110,14 @@ export const Wallet = pgTable("wallet", {
 export const WalletRelations = relations(Wallet, ({ one }) => ({
   user: one(User, { fields: [Wallet.userId], references: [User.id] }),
 }));
+
+export const RequestedTransaction = pgTable("requested_transaction", {
+  id: uuid("id").notNull().primaryKey().defaultRandom(),
+  walletId: uuid("walletId").notNull().references(() => Wallet.id, {
+    onDelete: "cascade",
+  }),
+  amount: text("amount").notNull(),
+  destination: varchar("destination", { length: 255 }).notNull(),
+  status: varchar("status", { length: 255, enum: ["pending", "completed"] }).notNull(),
+  verifiedOptions: json("verifiedOptions").$type<VerifiedOptions>().notNull(),
+});

@@ -40,7 +40,10 @@ export const CreateWallet: FC<CreateWalletProps> = ({ onComplete }) => {
         onChange={(e) => setWalletName(e.target.value)}
         placeholder="Wallet Name"
       />
-      <Button onClick={() => createWallet.mutate({ name: walletName })}>
+      <Button
+        onClick={() => createWallet.mutate({ name: walletName })}
+        disabled={createWallet.isPending}
+      >
         Create a wallet
       </Button>
     </form>

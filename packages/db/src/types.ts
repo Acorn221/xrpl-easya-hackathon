@@ -1,3 +1,7 @@
+export interface VerifiedOptions {
+	methods: (VerificationMethods & { verified: boolean, id: string })[];
+}
+
 export interface VerificationSettings {
 	triggerWhenOver: number;
 	methods: VerificationMethods[];
@@ -17,3 +21,4 @@ export interface ReactionTest {
 export interface PupilDialationTest {
 	name: "PupilDialationTest";
 }
+
