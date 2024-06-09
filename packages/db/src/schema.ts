@@ -51,17 +51,17 @@ export const User = pgTable("user", {
       {
         name: "ReactionTest",
       },
-      {
-        name: "PupilDialationTest",
-      },
+      // {
+      //   name: "PupilDialationTest",
+      // },
       {
         name: "GPTInterrogation",
         beliefs: [],
       },
-      {
-        name: "RubiksCubeTimeTest",
-        secondsToBeat: 60,
-      }
+      // {
+      //   name: "RubiksCubeTimeTest",
+      //   secondsToBeat: 60,
+      // }
     ],
   }),
 });
