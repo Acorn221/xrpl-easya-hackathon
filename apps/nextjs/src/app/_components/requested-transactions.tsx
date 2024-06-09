@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Button } from "@sobrxrpl/ui/button";
 import {
   Card,
@@ -8,7 +10,7 @@ import {
   CardTitle,
 } from "@sobrxrpl/ui/card";
 
-import { api } from "../../trpc/server";
+import { api } from "~/trpc/server";
 
 export const RequestedTransactionsIndicator = async () => {
   const requestedTransactions = await api.wallet.getAllRequestedTransactions();
@@ -30,12 +32,18 @@ export const RequestedTransactionsIndicator = async () => {
           the verification process to send them.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col justify-center gap-2">
         {requestedTransactions.map((transaction) => (
-          <Button>
-            {transaction.requested_transaction.amount} to{" "}
-            {transaction.requested_transaction.destination}
-          </Button>
+          <Link
+            href={`/requested-transactions/${transaction.requested_transaction.id}`}
+            key={transaction.requested_transaction.id}
+            className="w-full"
+          >
+            <Button className="w-full" variant="link">
+              {parseInt(transaction.requested_transaction.amount, 10) / 1000000}{" "}
+              to {transaction.requested_transaction.destination}
+            </Button>
+          </Link>
         ))}
       </CardContent>
     </Card>

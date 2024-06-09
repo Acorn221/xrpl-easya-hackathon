@@ -180,10 +180,10 @@ export const walletRouter = {
 
 	getRequestedTransaction: protectedProcedure
 		.input(z.object({ id: z.string() }))
-		.query(({ ctx, input }) => {
-			return ctx.db.query.RequestedTransaction.findFirst({
-				where: and(eq(RequestedTransaction.id, input.id), eq(Wallet.userId, ctx.session.user.id)),
-			});
+		.query(async ({ ctx, input }) => {
+			return (await ctx.db.select().from(RequestedTransaction)
+				.where(eq(RequestedTransaction.id, input.id))
+				.innerJoin(Wallet, eq(RequestedTransaction.walletId, Wallet.id)).limit(1))?.[0];
 		}),
 			
   create: protectedProcedure
