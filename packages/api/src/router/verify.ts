@@ -49,8 +49,9 @@ export const verifyRouter = {
                 model: 'gpt-3.5-turbo',
             });
 
-
-            return chatCompletion?.choices[0]?.message.includes("Yes");;
+            const msg = chatCompletion?.choices[0]?.message.content;
+            if(!msg) throw new Error("No message from GPT");
+            return msg.includes("Yes");;
         }),
 
 
