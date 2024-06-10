@@ -3,7 +3,7 @@
 
 Sobr blocks you from making transactions whilst you are too drunk, tired or otherwise impaired, through giving you a variety of challanges you have to complete to try and evaluate your current state.
 
-These challanges included:
+These challenges included:
 
  - Having to submit a photo of your pupils to make sure their size was within a standard range
  - Solving a bluetooth rubiks cube in under a minute
