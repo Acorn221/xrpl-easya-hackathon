@@ -10,6 +10,6 @@ These challanges included:
  - Having under 0.45s reaction time to a colour changing on the screen
  - Talking to GPT and convincing it you are who you say you are, by indirectly answering the security questions until it is happy, and having it evaluate your messages to try and estimate your current state.
 
-[Here's our presentation link](https://www.canva.com/design/DAGHoT1UPfc/_USRflFi9QucAEE5cAm6rw/edit?utm_content=DAGHoT1UPfc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+[Here's our presentation link](https://github.com/Acorn221/xrpl-easya-hackathon/blob/main/Sobr%20XRPL.pdf)
 
 [Here's the link to info about the hackathon](https://www.eventbrite.co.uk/e/easya-x-ripple-apex-hackathon-win-20000-tickets-882724261027?aff=oddtdtcreator)
