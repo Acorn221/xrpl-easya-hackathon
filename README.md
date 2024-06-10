@@ -1,7 +1,7 @@
 # Sobr XRPL
 <img src="https://raw.githubusercontent.com/Acorn221/xrpl-easya-hackathon/main/apps/nextjs/public/xrpl-logo2.png" width="300" height="300">
 
-Sobr blocks you from making transactions whilst you are too drunk, tired or otherwise impaired, through giving you a variety of challanges you have to complete to try and evaluate your current state.
+Sobr blocks you from making transactions whilst you are too drunk, tired or otherwise impaired, through giving you a variety of challenges you have to complete to try and evaluate your current state.
 
 These challenges included:
 
