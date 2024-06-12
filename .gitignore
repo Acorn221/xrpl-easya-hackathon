@@ -50,4 +50,14 @@ dist/
 
 # turbo
 .turbo
+
+#python
 python/__pycache__/app.cpython-312.pyc
+
+python/PupilSense/dataset/test/predicted/
+
+python/__pycache__/
+
+python/.vscode/
+
+python/PupilSense/models/

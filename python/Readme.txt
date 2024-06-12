@@ -1,0 +1,1 @@
+Go into PupilSnse and run setup
